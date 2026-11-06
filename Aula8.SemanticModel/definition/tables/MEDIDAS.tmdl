@@ -1,0 +1,70 @@
+table MEDIDAS
+	lineageTag: 3b801bc6-71c9-4942-8c81-c74e757c5f73
+
+	measure 'Total Vendido' = SUM(f_Vendas[Receita])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 630e4f33-702d-4b13-85c3-2cdd5b38f4cc
+
+	measure NumVendasRealizadas = COUNTROWS(f_Vendas)
+		formatString: 0.00
+		lineageTag: b99153fd-a0b2-4a45-a69e-57128e813430
+
+	measure 'Total Custo' = SUMX(f_Vendas,f_Vendas[Unidades]*RELATED(d_Produtos[Cusyo]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 32315f84-fc71-4a6e-ade0-c7886f5c340d
+
+	measure 'Total Lucro' = [Total Vendido]- [Total Custo]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 518ce86a-cc1d-4c39-a766-30cd635182f1
+
+	measure '% Margem de Lucro' = DIVIDE([Total Lucro],[Total Vendido])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 3521d172-c8aa-4f1f-9733-63b944e73ee2
+
+	measure 'Total Metas' = SUM(f_Metas[Meta])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 7057f461-8383-414d-9627-487eb390f3b5
+
+	measure '% Meta Atingida' = DIVIDE([Total Vendido],[Total Metas])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 288e997e-ab1a-46a9-a363-854fae2e436d
+
+	measure 'Lucro Ano Anterior' = CALCULATE([Total Lucro],SAMEPERIODLASTYEAR('d_Calendário'[Data]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 42bfda11-144c-4cdd-93ad-f0e55a9884ad
+
+	measure YTD = CALCULATE([Total Lucro],CALCULATETABLE(DATESYTD('d_Calendário'[Data]),'d_Calendário'[Houve Vendas]=true()))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: e0b7db44-b6c7-463d-9397-07365dadae91
+
+	measure 'YTD Ano Anterior' = CALCULATE([Total Lucro],SAMEPERIODLASTYEAR(DATESYTD('d_Calendário'[Data])))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: bd766bd9-f9c1-4059-9535-b746234e09ec
+
+	measure YOY = DIVIDE([Total Lucro]-[Lucro Ano Anterior],[Lucro Ano Anterior])
+		formatString: #,0.00%;-#,0.00%;#,0.00%
+		lineageTag: 91c3e911-371a-4f7e-9ff8-aa4ba7b29bf9
+
+	measure 'Converção Dolar' = SUM('Cotação'[BRL])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 45f59678-1235-4f14-a3f7-5e6d87de0676
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Valor Vendas R$' = [Total Vendido]* [Converção Dolar]
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 61bd90a5-d424-4577-ac97-0d7c6ece90f1
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition MEDIDAS = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Coluna 1" = _t]),
+				    #"Colunas Removidas" = Table.RemoveColumns(Fonte,{"Coluna 1"})
+				in
+				    #"Colunas Removidas"
+
+	annotation PBI_ResultType = Table
+

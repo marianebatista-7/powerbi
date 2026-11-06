@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "8b25ee4fb47500a428be",
+  "position": {
+    "x": 47.07213578500707,
+    "y": 57.029702970297031,
+    "z": 0,
+    "height": 561.24469589816124,
+    "width": 882.60254596888262,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "d_Fabricante"
+                    }
+                  },
+                  "Property": "Logo"
+                }
+              },
+              "queryRef": "d_Fabricante.Logo",
+              "nativeQueryRef": "Logo"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MEDIDAS"
+                    }
+                  },
+                  "Property": "Valor Vendas R$"
+                }
+              },
+              "queryRef": "MEDIDAS.Valor Vendas R$",
+              "nativeQueryRef": "Valor Vendas R$"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MEDIDAS"
+                    }
+                  },
+                  "Property": "Total Lucro"
+                }
+              },
+              "queryRef": "MEDIDAS.Total Lucro",
+              "nativeQueryRef": "Total Lucro"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

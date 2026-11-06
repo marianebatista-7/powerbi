@@ -1,0 +1,114 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "f9b666f85130d40bd121",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "height": 720,
+    "width": 1263.5820895522388,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "Aquarium1442671919391",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "d_País"
+                    }
+                  },
+                  "Property": "País"
+                }
+              },
+              "queryRef": "d_País.País",
+              "nativeQueryRef": "País"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MEDIDAS"
+                    }
+                  },
+                  "Property": "Valor Vendas R$"
+                }
+              },
+              "queryRef": "MEDIDAS.Valor Vendas R$",
+              "nativeQueryRef": "Valor Vendas R$"
+            }
+          ]
+        },
+        "FishSpeed": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MEDIDAS"
+                    }
+                  },
+                  "Property": "Total Lucro"
+                }
+              },
+              "queryRef": "MEDIDAS.Total Lucro",
+              "nativeQueryRef": "Total Lucro"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "MEDIDAS"
+                  }
+                },
+                "Property": "Valor Vendas R$"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "series": [
+        {
+          "properties": {
+            "series1type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'sharkie'"
+                }
+              }
+            },
+            "series2type": {
+              "expr": {
+                "Literal": {
+                  "Value": "'sharkie'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

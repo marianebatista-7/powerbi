@@ -1,0 +1,81 @@
+table d_País
+	lineageTag: fb83d17d-138f-4634-b3f7-87cc961b8687
+
+	column País
+		dataType: string
+		lineageTag: 2279f447-8890-4f9a-a7dd-43adef056ab9
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation __PBI_SemanticLinks = [{"LinkTarget":{"TableName":"d_País","TableItemName":"País (grupos)","ObjectType":4},"LinkType":"UsedInGroup"}]
+
+	column 'País (grupos)' =
+			SWITCH(
+				TRUE,
+				ISBLANK('d_País'[País]),
+				"(Em branco)",
+				'd_País'[País] IN {"Nigeria"},
+				"Àfrica",
+				'd_País'[País] IN {"Canada",
+					"Mexico",
+					"USA"},
+				"America do Norte",
+				'd_País'[País] IN {"Japan"},
+				"Asia",
+				'd_País'[País] IN {"Germany"},
+				"Europa",
+				'd_País'[País] IN {"Australia"},
+				"Oceania",
+				'd_País'[País]
+			)
+		lineageTag: ca70c659-4e10-45db-9a56-741f77cc23fa
+		summarizeBy: none
+
+		extendedProperty GroupingMetadata =
+				{
+				  "version": 0,
+				  "groupedColumns": [
+				    {
+				      "Column": {
+				        "Expression": {
+				          "SourceRef": {
+				            "Entity": "d_País"
+				          }
+				        },
+				        "Property": "País"
+				      }
+				    }
+				  ]
+				}
+
+		annotation GroupingDesignState = {"Version":0,"Sources":[{"Name":"d","Entity":"d_País"}],"GroupedColumns":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"País"}}],"GroupItems":[{"DisplayName":"(Em branco)","BlankDefaultPlaceholder":true},{"DisplayName":"Àfrica","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"País"}}],"Values":[[{"Literal":{"Value":"'Nigeria'"}}]]}}},{"DisplayName":"America do Norte","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"País"}}],"Values":[[{"Literal":{"Value":"'Canada'"}}],[{"Literal":{"Value":"'Mexico'"}}],[{"Literal":{"Value":"'USA'"}}]]}}},{"DisplayName":"Asia","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"País"}}],"Values":[[{"Literal":{"Value":"'Japan'"}}]]}}},{"DisplayName":"Europa","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"País"}}],"Values":[[{"Literal":{"Value":"'Germany'"}}]]}}},{"DisplayName":"Oceania","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"País"}}],"Values":[[{"Literal":{"Value":"'Australia'"}}]]}}}]}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_País = m
+		mode: import
+		queryGroup: DIMENSÃO
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("D:\MARIANE\POWER  BI\Projeto1\VendasMatriz\bi_dimensions.xlsx"), null, true),
+				    geo_Sheet = Fonte{[Item="geo",Kind="Sheet"]}[Data],
+				    #"Linhas Superiores Removidas" = Table.Skip(geo_Sheet,3),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Linhas Superiores Removidas", [PromoteAllScalars=true]),
+				    #"Dividir Coluna por Delimitador" = Table.SplitColumn(#"Cabeçalhos Promovidos", "City", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), {"City.1", "City.2", "City.3"}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Dividir Coluna por Delimitador",{"City.2", "City.3"}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Colunas Removidas",{{"City.1", "City"}}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Colunas Renomeadas",{{"City", type text}, {"Zip", type text}, {"State", type text}, {"Region", type text}, {"District", type text}, {"Country", type text}}),
+				    #"Personalização Adicionada" = Table.AddColumn(#"Tipo Alterado", "Chave_ZIP", each [Zip]&[Country]),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Personalização Adicionada",{{"Chave_ZIP", type text}}),
+				    #"Outras Colunas Removidas" = Table.SelectColumns(#"Tipo Alterado1",{"Country"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas"),
+				    #"Colunas Renomeadas1" = Table.RenameColumns(#"Duplicatas Removidas",{{"Country", "País"}})
+				in
+				    #"Colunas Renomeadas1"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

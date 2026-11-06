@@ -1,0 +1,75 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "006e749cc41913b19d43",
+  "position": {
+    "x": 256.1194029850746,
+    "y": 9.8507462686567155,
+    "z": 1000,
+    "height": 107.46268656716417,
+    "width": 280.29850746268659,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "MEDIDAS"
+                    }
+                  },
+                  "Property": "NumVendasRealizadas"
+                }
+              },
+              "queryRef": "MEDIDAS.NumVendasRealizadas",
+              "nativeQueryRef": "NumVendasRealizadas",
+              "format": "#,0"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "MEDIDAS"
+                  }
+                },
+                "Property": "NumVendasRealizadas"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "value": [
+        {
+          "properties": {
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "MEDIDAS.NumVendasRealizadas"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,70 @@
+expression Parâmetro1 = #"Arquivo de Amostra" meta [IsParameterQuery=true, BinaryIdentifier=#"Arquivo de Amostra", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 4940ade3-428f-4b21-851e-58694cea9a83
+	queryGroup: 'Transformar Arquivo de VendasInternacionais\Consultas Auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Arquivo de Amostra' =
+		let
+		    Fonte = Folder.Files("D:\MARIANE\POWER  BI\Projeto1\VendasInternacionais"),
+		    Navegação1 = Fonte{0}[Content]
+		in
+		    Navegação1
+	lineageTag: 567ed173-999f-4ced-ba5e-2f0ae0ebb449
+	queryGroup: 'Transformar Arquivo de VendasInternacionais\Consultas Auxiliares'
+
+	annotation PBI_ResultType = Binary
+
+	annotation PBI_NavigationStepName = Navegação
+
+expression 'Transformar o Arquivo de Exemplo' =
+		let
+		    Fonte = Csv.Document(Parâmetro1,[Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.None])
+		in
+		    Fonte
+	lineageTag: 85732a7d-5eeb-477d-a7ca-22a1f5a8e89c
+	queryGroup: 'Transformar Arquivo de VendasInternacionais'
+
+	annotation PBI_ResultType = Table
+
+expression 'Transformar Arquivo' =
+		let
+		    Fonte = (Parâmetro1 as binary) => let
+		    Fonte = Csv.Document(Parâmetro1,[Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.None])
+		in
+		    Fonte
+		in
+		    Fonte
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transformar o Arquivo de Exemplo""}" ]
+	lineageTag: 5739a715-c42f-4c1d-ab56-3458ad4aeeaa
+	queryGroup: 'Transformar Arquivo de VendasInternacionais\Consultas Auxiliares'
+
+	annotation PBI_ResultType = Function
+
+expression 'Vendas US' =
+		let
+		    Fonte = Csv.Document(File.Contents("D:\MARIANE\POWER  BI\Projeto1\VendasMatriz\sales.csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+		    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+		    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Date", type date}, {"Units", Int64.Type}}),
+		    #"Tipo Alterado com Localidade" = Table.TransformColumnTypes(#"Tipo Alterado", {{"Revenue", Currency.Type}}, "en-US")
+		in
+		    #"Tipo Alterado com Localidade"
+	lineageTag: 0750ff87-78a9-4c71-a9b7-8c471610af8f
+	queryGroup: FATO
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
+expression Consulta1 =
+		let
+		    Fonte = List.Dates
+		in
+		    Fonte
+	lineageTag: 38c9fa03-bda9-4e99-9ab6-5b6764c05024
+	queryGroup: FATO
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Function
+

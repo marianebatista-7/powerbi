@@ -1,0 +1,153 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY26SU07",
+      "reportVersionAtImport": {
+        "visual": "2.11.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "Tema_CPTM024388347693366508.json",
+      "reportVersionAtImport": {
+        "visual": "2.11.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "publicCustomVisuals": [
+    "Aquarium1442671919391"
+  ],
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY26SU07",
+          "path": "BaseThemes/CY26SU07.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "AnoXAnoDark004108834268361838.JPG",
+          "path": "AnoXAnoDark004108834268361838.JPG",
+          "type": "Image"
+        },
+        {
+          "name": "bar-chart-search-detail7047435327432712.png",
+          "path": "bar-chart-search-detail7047435327432712.png",
+          "type": "Image"
+        },
+        {
+          "name": "Bot_oDark6619603168568216.png",
+          "path": "Bot_oDark6619603168568216.png",
+          "type": "Image"
+        },
+        {
+          "name": "Bot_oLight5552138444334659.png",
+          "path": "Bot_oLight5552138444334659.png",
+          "type": "Image"
+        },
+        {
+          "name": "chart-bar-arrow638335321957333.png",
+          "path": "chart-bar-arrow638335321957333.png",
+          "type": "Image"
+        },
+        {
+          "name": "Dash_AnoxAno09604551285208485.JPG",
+          "path": "Dash_AnoxAno09604551285208485.JPG",
+          "type": "Image"
+        },
+        {
+          "name": "Dash_Geral6240511656569399.JPG",
+          "path": "Dash_Geral6240511656569399.JPG",
+          "type": "Image"
+        },
+        {
+          "name": "Filtro40175399800850375.png",
+          "path": "Filtro40175399800850375.png",
+          "type": "Image"
+        },
+        {
+          "name": "Filtro459146911855996.png",
+          "path": "Filtro459146911855996.png",
+          "type": "Image"
+        },
+        {
+          "name": "GeralDark22863748865886746.JPG",
+          "path": "GeralDark22863748865886746.JPG",
+          "type": "Image"
+        },
+        {
+          "name": "map-city6923861883271596.png",
+          "path": "map-city6923861883271596.png",
+          "type": "Image"
+        },
+        {
+          "name": "moneybag-dollar2919459578080701.png",
+          "path": "moneybag-dollar2919459578080701.png",
+          "type": "Image"
+        },
+        {
+          "name": "moneybag-dollar589761548022272.png",
+          "path": "moneybag-dollar589761548022272.png",
+          "type": "Image"
+        },
+        {
+          "name": "Tema_CPTM024388347693366508.json",
+          "path": "Tema_CPTM024388347693366508.json",
+          "type": "CustomTheme"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true,
+    "customMemoryLimit": "1048576",
+    "customTimeoutLimit": "225"
+  }
+}

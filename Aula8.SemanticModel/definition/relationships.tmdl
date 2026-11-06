@@ -1,0 +1,42 @@
+relationship cc98c4bc-4996-4a94-b6d5-6bc40899562a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: f_Metas.Data
+	toColumn: LocalDateTable_d2960e47-c5d6-429d-b9f5-789645d3082f.Date
+
+relationship 7cb32514-37b2-446d-8fc6-98d8e798f948
+	joinOnDateBehavior: datePartOnly
+	fromColumn: d_Calendário.Data
+	toColumn: LocalDateTable_3cd045c2-53fa-40a7-970a-2f6d2a2f7c71.Date
+
+relationship 52d316e1-649c-c97b-cef6-fafc6ef2d699
+	fromColumn: f_Vendas.'ID do Produto'
+	toColumn: d_Produtos.'ID  do Produto'
+
+relationship bfa35657-45df-df2e-1ece-98dbbb552ca8
+	fromColumn: d_Produtos.'ID do Fabricante'
+	toColumn: d_Fabricante.'ID  do fabricante'
+
+relationship c5032556-0436-ae8c-2ec2-2e9efe5c9ec3
+	fromColumn: f_Vendas.Chave_ZIP
+	toColumn: d_Geo.Chave_ZIP
+
+relationship 77f949ce-d69c-31dc-9264-0fac944b689d
+	fromColumn: f_Vendas.País
+	toColumn: d_País.País
+
+relationship 497cceb6-eb1f-7d62-4304-ccd9399539da
+	fromColumn: f_Vendas.Data
+	toColumn: d_Calendário.Data
+
+relationship cae434d3-01df-a91c-8de3-5c06aeb329dd
+	fromColumn: f_Metas.País
+	toColumn: d_País.País
+
+relationship 9dfff557-e1b9-f9ae-5d49-3977d4cb6f40
+	fromColumn: f_Metas.Ano
+	toColumn: d_ano.Ano
+
+relationship c7c57cea-441d-c730-35e1-900c4ef48dba
+	fromColumn: d_Calendário.Ano
+	toColumn: d_ano.Ano
+

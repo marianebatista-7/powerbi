@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Aula8"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "353f286b-7e78-4159-b7a1-9dbd912f78e1"
+  }
+}

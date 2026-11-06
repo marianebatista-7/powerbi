@@ -1,0 +1,33 @@
+table Cotação
+	lineageTag: 5c76c935-07da-4b2b-88e9-1d79574b057c
+
+	column BRL
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 7079269c-c3e9-4d36-8923-9279d10dc020
+		summarizeBy: sum
+		sourceColumn: BRL
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition Cotação = m
+		mode: import
+		source =
+				let
+				    Fonte = Web.BrowserContents("https://wise.com/br/currency-converter/dolar-hoje"),
+				    #"Tabela extraída de HTML" = Html.Table(Fonte, {{"Column1", "TABLE._table_1st55_9:nth-child(2) > * > TR > :nth-child(1)"}, {"Column2", "TABLE._table_1st55_9:nth-child(2) > * > TR > :nth-child(2)"}}, [RowSelector="TABLE._table_1st55_9:nth-child(2) > * > TR"]),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tabela extraída de HTML",{"Column1"}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Colunas Removidas",{{"Column2", "BRL"}}),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Colunas Renomeadas"," BRL","",Replacer.ReplaceText,{"BRL"}),
+				    #"Primeiras Linhas Mantidas" = Table.FirstN(#"Valor Substituído",2),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Primeiras Linhas Mantidas", [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"BRL", Currency.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,53 @@
+table IPCA
+	lineageTag: f3b9f848-5ace-4a8b-a85a-8cd19cf8fd45
+
+	column Valor
+		dataType: double
+		lineageTag: 127885cf-725e-439e-a81f-11fd57816707
+		summarizeBy: sum
+		sourceColumn: Valor
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: c3f8007f-3bf8-41b1-b5ed-35b80accbb96
+		summarizeBy: sum
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mês
+		dataType: int64
+		formatString: 0
+		lineageTag: f82f285e-85b4-491d-af06-097860296e28
+		summarizeBy: sum
+		sourceColumn: Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	partition IPCA = m
+		mode: import
+		source =
+				let
+				    Fonte = Json.Document(Web.Contents("https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/63/p/all/d/v63%202")),
+				    #"Convertido para Tabela" = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Column1 Expandido" = Table.ExpandRecordColumn(#"Convertido para Tabela", "Column1", {"NC", "NN", "MC", "MN", "V", "D1C", "D1N", "D2C", "D2N", "D3C", "D3N"}, {"NC", "NN", "MC", "MN", "V", "D1C", "D1N", "D2C", "D2N", "D3C", "D3N"}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Column1 Expandido", [PromoteAllScalars=true]),
+				    #"Outras Colunas Removidas" = Table.SelectColumns(#"Cabeçalhos Promovidos",{"Mês (Código)", "Valor"}),
+				    #"Linhas Superiores Removidas" = Table.Skip(#"Outras Colunas Removidas",1),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Linhas Superiores Removidas",".",",",Replacer.ReplaceText,{"Valor"}),
+				    #"Colunas Reordenadas" = Table.ReorderColumns(#"Valor Substituído",{"Valor", "Mês (Código)"}),
+				    #"Dividir Coluna pela Posição" = Table.SplitColumn(#"Colunas Reordenadas", "Mês (Código)", Splitter.SplitTextByRepeatedLengths(4), {"Mês (Código).1", "Mês (Código).2"}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Dividir Coluna pela Posição",{{"Mês (Código).1", "Ano"}, {"Mês (Código).2", "Mês"}}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Colunas Renomeadas",{{"Mês", Int64.Type}, {"Ano", Int64.Type}, {"Valor", Percentage.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

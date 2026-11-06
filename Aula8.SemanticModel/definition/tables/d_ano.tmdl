@@ -1,0 +1,31 @@
+table d_ano
+	lineageTag: 3d351c98-cd22-409f-824a-97bc7f218b94
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: 5cac46df-19d2-47f9-816b-63e6813009b4
+		summarizeBy: none
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_ano = m
+		mode: import
+		queryGroup: DIMENSÃO
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("D:\MARIANE\POWER  BI\Projeto1\VendasMatriz\Metas.xlsx"), null, true),
+				    Metas_Sheet = Fonte{[Item="Metas",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Metas_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Meta", Currency.Type}, {"Country", type text}, {"Ano", Int64.Type}}),
+				    #"Data Inserida" = Table.AddColumn(#"Tipo Alterado", "Data", each Date.From(Text.From([Ano], "pt-BR")), type date),
+				    #"Outras Colunas Removidas" = Table.SelectColumns(#"Data Inserida",{"Ano"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas")
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

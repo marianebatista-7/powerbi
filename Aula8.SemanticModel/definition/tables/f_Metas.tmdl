@@ -1,0 +1,65 @@
+table f_Metas
+	lineageTag: 488e3a9c-1277-4920-9bc6-a50ac376c340
+
+	column País
+		dataType: string
+		lineageTag: 44390d57-5434-4110-9d7a-18378f966e19
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+	column Meta
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 79beee98-b312-4e8d-997a-ca023e22e9de
+		summarizeBy: sum
+		sourceColumn: Meta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: 88cc9e89-a30f-44a9-bc05-a88ccee150a3
+		summarizeBy: none
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 86ff49e1-3100-49c4-831b-125c22196931
+		summarizeBy: none
+		sourceColumn: Data
+
+		variation Variation
+			isDefault
+			relationship: cc98c4bc-4996-4a94-b6d5-6bc40899562a
+			defaultHierarchy: LocalDateTable_d2960e47-c5d6-429d-b9f5-789645d3082f.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition f_Metas = m
+		mode: import
+		queryGroup: FATO
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("D:\MARIANE\POWER  BI\Projeto1\VendasMatriz\Metas.xlsx"), null, true),
+				    Metas_Sheet = Fonte{[Item="Metas",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Metas_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Meta", Currency.Type}, {"Country", type text}, {"Ano", Int64.Type}}),
+				    #"Data Inserida" = Table.AddColumn(#"Tipo Alterado", "Data", each Date.From(Text.From([Ano], "pt-BR")), type date),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Data Inserida",{{"Country", "País"}})
+				in
+				    #"Colunas Renomeadas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

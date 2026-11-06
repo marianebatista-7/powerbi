@@ -1,0 +1,88 @@
+table d_Fabricante
+	lineageTag: 307bcc3b-84e2-40d3-994c-52b32811780b
+
+	column 'ID  do fabricante'
+		dataType: string
+		lineageTag: 51520bc9-de3d-4d7b-8a90-d60cba7cc4a4
+		summarizeBy: none
+		sourceColumn: ID  do fabricante
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fabricantes
+		dataType: string
+		lineageTag: fe116b06-fdc7-484f-a49e-e11e8b33eb8a
+		summarizeBy: none
+		sourceColumn: Fabricantes
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation __PBI_SemanticLinks = [{"LinkTarget":{"TableName":"d_Fabricante","TableItemName":"Fabricantes (grupos)","ObjectType":4},"LinkType":"UsedInGroup"}]
+
+	column Logo
+		dataType: string
+		lineageTag: 7a7c20b5-bfaa-41a2-bc54-34365ae310a3
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Logo
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Fabricantes (grupos)' =
+			SWITCH(
+				TRUE,
+				ISBLANK('d_Fabricante'[Fabricantes]),
+				"(Em branco)",
+				'd_Fabricante'[Fabricantes] IN {"VanArsdel"},
+				"Principal",
+				'd_Fabricante'[Fabricantes] IN {"Aliqui",
+					"Currus",
+					"Pirum"},
+				"Secundários",
+				"Outros"
+			)
+		lineageTag: ff38712e-71d6-4c2d-b6af-51218339a513
+		summarizeBy: none
+
+		extendedProperty GroupingMetadata =
+				{
+				  "version": 0,
+				  "groupedColumns": [
+				    {
+				      "Column": {
+				        "Expression": {
+				          "SourceRef": {
+				            "Entity": "d_Fabricante"
+				          }
+				        },
+				        "Property": "Fabricantes"
+				      }
+				    }
+				  ]
+				}
+
+		annotation GroupingDesignState = {"Version":0,"Sources":[{"Name":"d","Entity":"d_Fabricante"}],"GroupedColumns":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"Fabricantes"}}],"GroupItems":[{"DisplayName":"(Em branco)","BlankDefaultPlaceholder":true},{"DisplayName":"Principal","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"Fabricantes"}}],"Values":[[{"Literal":{"Value":"'VanArsdel'"}}]]}}},{"DisplayName":"Secundários","Expression":{"In":{"Expressions":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"Fabricantes"}}],"Values":[[{"Literal":{"Value":"'Aliqui'"}}],[{"Literal":{"Value":"'Currus'"}}],[{"Literal":{"Value":"'Pirum'"}}]]}}},{"DisplayName":"Outros"}]}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_Fabricante = m
+		mode: import
+		queryGroup: DIMENSÃO
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("D:\MARIANE\POWER  BI\Projeto1\VendasMatriz\bi_dimensions.xlsx"), null, true),
+				    manufacturer_Sheet = Fonte{[Item="manufacturer",Kind="Sheet"]}[Data],
+				    #"Linhas Superiores Removidas" = Table.Skip(manufacturer_Sheet,1),
+				    #"Linhas Inferiores Removidas" = Table.RemoveLastN(#"Linhas Superiores Removidas",3),
+				    #"Tabela Transposta" = Table.Transpose(#"Linhas Inferiores Removidas"),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Tabela Transposta", [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"ManufacturerID", type text}, {"Manufacturer", type text}, {"Logo", type text}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"ManufacturerID", "ID  do fabricante"}, {"Manufacturer", "Fabricantes"}}),
+				    #"Linhas Filtradas" = Table.SelectRows(#"Colunas Renomeadas", each true)
+				in
+				    #"Linhas Filtradas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

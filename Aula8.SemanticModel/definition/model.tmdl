@@ -1,0 +1,48 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transformar Arquivo de VendasInternacionais'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transformar Arquivo de VendasInternacionais\Consultas Auxiliares'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup FATO
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup DIMENSÃO
+
+	annotation PBI_QueryGroupOrder = 3
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["f_Vendas","Arquivo de Amostra","Parâmetro1","Transformar o Arquivo de Exemplo","Vendas US","Transformar Arquivo","d_Produtos","d_Geo","d_Fabricante","f_Metas","d_País","d_ano","Consulta1","d_Calendário","MEDIDAS","Cotação","IPCA"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table f_Vendas
+ref table d_Produtos
+ref table d_Geo
+ref table d_Fabricante
+ref table f_Metas
+ref table DateTableTemplate_65c097c5-a241-48eb-a4df-afd3dbdd8fe8
+ref table d_País
+ref table d_ano
+ref table LocalDateTable_d2960e47-c5d6-429d-b9f5-789645d3082f
+ref table d_Calendário
+ref table LocalDateTable_3cd045c2-53fa-40a7-970a-2f6d2a2f7c71
+ref table MEDIDAS
+ref table Cotação
+ref table IPCA
+
+ref cultureInfo pt-BR
+

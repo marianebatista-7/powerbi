@@ -1,0 +1,96 @@
+table f_Vendas
+	lineageTag: dc46e609-33e0-4008-ae7e-ceffac9e77eb
+
+	column 'ID do Produto'
+		dataType: string
+		lineageTag: b9b43475-f1a6-4148-99b2-d8d4111b1a81
+		summarizeBy: none
+		sourceColumn: ID do Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6298d5ef-f280-4ca5-8e2f-ffc1643befc9
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Zip
+		dataType: string
+		lineageTag: 83288763-efad-4f05-b08f-9905200112c1
+		summarizeBy: none
+		sourceColumn: Zip
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unidades
+		dataType: int64
+		formatString: 0
+		lineageTag: cf8120fa-e7d4-4092-8cf9-83948193ab45
+		summarizeBy: sum
+		sourceColumn: Unidades
+
+		annotation SummarizationSetBy = Automatic
+
+	column Receita
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 15e02c31-1e57-4e4c-ad33-1085169b0a8a
+		summarizeBy: sum
+		sourceColumn: Receita
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column País
+		dataType: string
+		lineageTag: e1537575-2cca-4bcf-8b0d-4f99c0018f1a
+		summarizeBy: none
+		sourceColumn: País
+
+		annotation SummarizationSetBy = Automatic
+
+	column Chave_ZIP
+		dataType: string
+		lineageTag: 530582ee-fd5d-4007-b0f6-d564454762ca
+		summarizeBy: none
+		sourceColumn: Chave_ZIP
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_Vendas = m
+		mode: import
+		queryGroup: FATO
+		source =
+				let
+				    Fonte = Folder.Files("D:\MARIANE\POWER  BI\Projeto1\VendasInternacionais"),
+				    #"Arquivos Ocultos Filtrados1" = Table.SelectRows(Fonte, each [Attributes]?[Hidden]? <> true),
+				    #"Invocar Função Personalizada1" = Table.AddColumn(#"Arquivos Ocultos Filtrados1", "Transformar Arquivo", each #"Transformar Arquivo"([Content])),
+				    #"Colunas Renomeadas1" = Table.RenameColumns(#"Invocar Função Personalizada1", {"Name", "Nome da Origem"}),
+				    #"Outras Colunas Removidas1" = Table.SelectColumns(#"Colunas Renomeadas1", {"Nome da Origem", "Transformar Arquivo"}),
+				    #"Coluna de Tabela Expandida1" = Table.ExpandTableColumn(#"Outras Colunas Removidas1", "Transformar Arquivo", Table.ColumnNames(#"Transformar Arquivo"(#"Arquivo de Amostra"))),
+				    #"Linhas Filtradas" = Table.SelectRows(#"Coluna de Tabela Expandida1", each true),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Linhas Filtradas",{"Nome da Origem"}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Colunas Removidas", [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Units", Int64.Type}, {"Country", type text}, {"ProductID", type text}, {"Date", type date}}),
+				    #"Tipo Alterado com Localidade" = Table.TransformColumnTypes(#"Tipo Alterado", {{"Revenue", Currency.Type}}, "en-US"),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Tipo Alterado com Localidade",{{"Zip", type text}}),
+				    #"Consulta Acrescentada" = Table.Combine({#"Tipo Alterado1", #"Vendas US"}),
+				    #"Linhas Filtradas1" = Table.SelectRows(#"Consulta Acrescentada", each true),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Linhas Filtradas1",null,"USA",Replacer.ReplaceValue,{"Country"}),
+				    #"Linhas Filtradas2" = Table.SelectRows(#"Valor Substituído", each ([Country] <> "Country")),
+				    #"Coluna Mesclada Inserida" = Table.AddColumn(#"Linhas Filtradas2", "Chave_ZIP", each Text.Combine({[Zip], [Country]}), type text),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Coluna Mesclada Inserida",{{"ProductID", "ID do Produto"}, {"Date", "Data"}, {"Units", "Unidades"}, {"Revenue", "Receita"}, {"Country", "País"}})
+				in
+				    #"Colunas Renomeadas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

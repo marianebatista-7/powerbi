@@ -1,0 +1,48 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "06f2496588330bd40c55",
+  "displayName": "Página 2",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "594cc09a05b3db081407",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "f_Vendas"
+              }
+            },
+            "Property": "Chave_ZIP"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "de0dc176704e96de6ec9",
+    "type": "Drillthrough",
+    "parameters": [
+      {
+        "name": "d79b4a85d8217550a9de",
+        "boundFilter": "594cc09a05b3db081407",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "f_Vendas"
+              }
+            },
+            "Property": "Chave_ZIP"
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode"
+}
