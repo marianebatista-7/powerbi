@@ -17,7 +17,7 @@ O projeto apresenta indicadores de vendas, lucro, margem de lucro, metas e compa
 
 Acesse:
 
-https://github.com/marianebatista966-hub/powerbi
+https://github.com/marianebatista-7/powerbi
 
 ### 2. Baixar o arquivo ZIP
 
